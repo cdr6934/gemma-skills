@@ -23,6 +23,10 @@ python3 scripts/new_skill.py <skill-name> --type <text|js|js-webview|native> --d
 python3 scripts/validate_skill.py skills/<skill-name>
 python3 scripts/validate_skill.py --all
 
+# Eject a skill into its own standalone, deployable repo (files at repo root + .nojekyll).
+# Each shipped skill lives in its own project; this toolkit is just the workshop.
+python3 scripts/eject_skill.py <skill-name>          # creates ../<skill-name>, prints gh publish cmds
+
 # Serve skills locally over HTTP with correct MIME types (for in-app "Load from URL" testing).
 # raw.githubusercontent.com serves text/plain and will NOT execute JS skills — use a real host.
 python3 -m http.server 8000   # then point the app at http://<your-ip>:8000/skills/<name>
@@ -30,6 +34,13 @@ python3 -m http.server 8000   # then point the app at http://<your-ip>:8000/skil
 
 There is no build step, package manager, or test framework. Skills are static files
 (Markdown + HTML/JS) executed inside the app's webview.
+
+**Each skill ships as its own standalone repo.** Author and validate under `skills/<name>/` here,
+then `eject_skill.py` copies the skill's files to the *root* of a sibling directory (so the whole
+repo IS the skill folder, giving a clean Pages URL like `https://<user>.github.io/<name>/`) and
+adds `.nojekyll`. Publish that as a public repo with Pages. After ejecting, the skill is removed
+from `skills/` here — this repo stays purely the creator toolkit. Example shipped skill:
+`ascii-cam` → https://github.com/cdr6934/ascii-cam (https://cdr6934.github.io/ascii-cam).
 
 ## How skills execute (the key constraint)
 

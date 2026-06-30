@@ -23,9 +23,16 @@ python3 scripts/new_skill.py my-skill --type js --description "What it does, in 
 # 3. Validate the structural contract
 python3 scripts/validate_skill.py skills/my-skill      # or --all
 
-# 4. Test in the Gallery app (Skills chip → + → Load from URL / Import local)
-python3 -m http.server 8000   # serve locally; JS skills need a real host, not raw.githubusercontent
+# 4. Eject into its own standalone repo (files at root + .nojekyll), then publish to GitHub Pages
+python3 scripts/eject_skill.py my-skill                 # creates ../my-skill, prints gh commands
+gh repo create my-skill --public --source=../my-skill --remote=origin --push
+gh api -X POST repos/<owner>/my-skill/pages -f 'source[branch]=main' -f 'source[path]=/'
+# → add in app: https://<owner>.github.io/my-skill
 ```
+
+JS skills must be served from a real host (GitHub Pages with `.nojekyll`), **not**
+`raw.githubusercontent.com` (which serves `text/plain` and won't execute the webview).
+Each skill ships as its own repo; this repo stays the creator toolkit.
 
 ## Skill types
 
